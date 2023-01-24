@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function Template({ booking, signature }) {
+export default function Template({ booking }) {
   return (
     <Document>
       <Page style={styles.page}>
@@ -70,7 +70,7 @@ export default function Template({ booking, signature }) {
           </View>
           <View style={styles.signature}>
             <Text>The Renter</Text>
-            {signature && <Image style={styles.renter} src={signature} />}
+            {booking?.signature && <Image style={styles.renter} src={booking?.signature} />}
           </View>
         </View>
       </Page>

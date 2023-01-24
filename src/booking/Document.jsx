@@ -2,20 +2,26 @@ import { useEffect, useState } from "react";
 import { PDFViewer } from "@react-pdf/renderer";
 import { Box, Button, Dialog } from "@mui/material";
 import { Template, SignaturePad } from "./components";
-import { getBooking } from "./services/bookingService";
+import { getBooking, signBooking } from "./services/bookingService";
 
 export default function Document() {
   const [booking, setBooking] = useState();
-  const [signature, setSignature] = useState('');
   const [signaturePadIsOpen, setSignaturePadIsOpen] = useState(false);
 
   useEffect(() => {
-    setBooking(getBooking());
+    getBooking()
+      .then(booking => setBooking(booking))
+      .catch(() => console.log('Failed to load booking'));
   }, []);
 
   const afterConfirm = signature => {
-    setSignature(signature);
+    setBooking({ ...booking, signature });
     setSignaturePadIsOpen(false);
+  }
+
+  const onSend = () => {
+    signBooking(booking.signature)
+      .then(() => console.log('signed'));
   }
 
   return (
@@ -29,7 +35,7 @@ export default function Document() {
         }}
       >
         <PDFViewer width={800} height={800}>
-          <Template booking={booking} signature={signature} />
+          <Template booking={booking} />
         </PDFViewer>
         <Box
           sx={{
@@ -41,7 +47,8 @@ export default function Document() {
         >
           <Button
             variant="contained"
-            onClick={() => {  }}
+            onClick={onSend}
+            disabled={!booking?.signature}
           >
             Send
           </Button>

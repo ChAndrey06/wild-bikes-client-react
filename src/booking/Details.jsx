@@ -8,8 +8,9 @@ export default function Details() {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = booking => {
-    setBooking(booking);
-    navigate('../document');
+    setBooking(booking)
+      .then(() => navigate('../document'))
+      .catch(() => console.log('Failed to save booking'));
   }
 
   return (
